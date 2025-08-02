@@ -23,7 +23,8 @@ class AuthController extends Controller
             if ($user->tokens()->exists()) {
                 return response()->json([
                     'status' => true,
-                    'message' => 'User already logged in. Please logout first.'
+                    'message' => 'User already logged in. Please logout first.',
+                    'logout' => url('/api/logout')
                 ], 403);
             }
 
