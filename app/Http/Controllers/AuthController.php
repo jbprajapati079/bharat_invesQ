@@ -20,7 +20,12 @@ class AuthController extends Controller
                 return response()->json(['message' => 'Invalid credentials'], 401);
             }
 
-            $user->tokens()->delete();
+            if ($user->tokens()->exists()) {
+                return response()->json([
+                    'status' => true,
+                    'message' => 'User already logged in. Please logout first.'
+                ], 403);
+            }
 
             $token = $user->createToken('api-token')->plainTextToken;
 
@@ -41,8 +46,6 @@ class AuthController extends Controller
         }
     }
 
-
-
     public function register(UserRequest $request)
     {
 
@@ -62,6 +65,26 @@ class AuthController extends Controller
                     'name' => $user->name,
                     'email' => $user->email,
                 ],
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Something went wrong',
+                'error' => $th->getMessage()
+            ], 500);
+        }
+    }
+
+
+    public function logout(Request $request)
+    {
+
+        try {
+            $request->user()->tokens()->delete();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Logged out successfully'
             ]);
         } catch (\Throwable $th) {
             return response()->json([
