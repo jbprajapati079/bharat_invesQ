@@ -12,13 +12,13 @@ Route::post('login', [AuthController::class, 'login'])->name('login');
 Route::middleware('auth:sanctum')->group(function () {
 
 
+    //Product Route
     Route::get('products', [ProductController::class, 'index']);
     Route::get('/products/search', [ProductController::class, 'search']);
     Route::post('/products', [ProductController::class, 'store']);
 
 
-    Route::prefix('orders')->group(function () {
-        Route::post('/', [OrderController::class, 'store']);
-        Route::get('/', [OrderController::class, 'index']);
-    });
+    //Order Route
+    Route::get('orders', [OrderController::class, 'index']);
+    Route::post('orders', [OrderController::class, 'store']);
 });
