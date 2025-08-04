@@ -32,9 +32,9 @@ class ProductController extends Controller
     public function search(Request $request)
     {
         try {
-            $query = $request->input('q');
+            $search = $request->input('name');
 
-            $products = Product::where('name', 'LIKE', "%{$query}%")->get();
+            $products = Product::where('user_id', Auth::id())->where('name', 'LIKE', "%{$search}%")->get();
 
             if ($products->isEmpty()) {
                 return response()->json([
